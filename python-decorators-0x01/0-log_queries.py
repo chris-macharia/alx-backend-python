@@ -1,15 +1,17 @@
 import mysql.connector
 import functools
+from datetime import datetime
 
-# Decorator to log SQL queries
+# Decorator to log SQL queries with a timestamp
 def log_queries(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         query = kwargs.get('query') or (args[0] if args else None)
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if query:
-            print(f"Executing SQL Query: {query}")
+            print(f"[{timestamp}] Executing SQL Query: {query}")
         else:
-            print("No SQL Query provided!")
+            print(f"[{timestamp}] No SQL Query provided!")
         return func(*args, **kwargs)
     return wrapper
 
