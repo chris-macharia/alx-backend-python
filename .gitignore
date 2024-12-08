@@ -1,1 +1,61 @@
-*__pycache__
+# Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Django migration files
+*/migrations/
+
+# Database files
+*.sqlite3
+db.sqlite3
+
+# Logs
+*.log
+
+# Local environment variables
+.env
+
+# Django static files
+/static/
+
+# Media files (user-uploaded content)
+media/
+
+# Virtual environment
+*venv/
+env/
+*.env/
+
+# IDE/editor specific files
+.idea/
+.vscode/
+
+# MacOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Coverage reports
+.coverage
+*.coveragerc
+*.tox
+
+# Python egg-info
+*.egg-info/
+
+# Django secret key file (if applicable)
+.secret_key
+
+# Celery related files (if applicable)
+celerybeat-schedule
+*.pid
+
+# Local settings (if separate from default settings)
+local_settings.py
+
+# Django's default test database
+test_db/
+
+# PyCharm IDE project files
+*.iml
