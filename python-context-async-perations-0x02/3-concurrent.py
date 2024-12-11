@@ -1,5 +1,6 @@
 import asyncio
 import aiomysql
+import aiosqlite
 
 async def async_fetch_users(pool):
     async with pool.acquire() as connection:
