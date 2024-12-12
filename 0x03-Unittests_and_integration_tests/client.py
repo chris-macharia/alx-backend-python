@@ -28,6 +28,7 @@ class GithubOrgClient:
     ORG_URL = "https://api.github.com/orgs"
 
     def __init__(self, org_name: str) -> None:
+
         """Init method of GithubOrgClient"""
         self._org_name = org_name
 
