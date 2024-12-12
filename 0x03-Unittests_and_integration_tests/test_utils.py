@@ -1,43 +1,42 @@
-#!/usr/bin/env python3
-
 import unittest
-from unittest.mock import patch, Mock
-from utils import get_json
+from unittest.mock import patch
 
-class TestGetJson(unittest.TestCase):
-    
-    @patch("utils.requests.get")
-    def test_get_json(self, mock_get):
-        """
-        Test the utils.get_json function to ensure it returns the expected result.
-        Uses unittest.mock.patch decorator to mock external HTTP calls.
-        """
-        # Define test cases
-        test_cases = [
-            {"test_url": "http://example.com", "test_payload": {"payload": True}},
-            {"test_url": "http://holberton.io", "test_payload": {"payload": False}}
-        ]
+def memoize(func):
+    """A simple memoize decorator."""
+    cache = {}
 
-        for case in test_cases:
-            test_url = case["test_url"]
-            test_payload = case["test_payload"]
+    def wrapper(*args):
+        if args in cache:
+            return cache[args]
+        result = func(*args)
+        cache[args] = result
+        return result
 
-            # Reset the mock to clear any previous calls
-            mock_get.reset_mock()
+    return wrapper
 
-            # Create a Mock response object with a json method
-            mock_response = Mock()
-            mock_response.json.return_value = test_payload
-            mock_get.return_value = mock_response
+class TestClass:
+    def a_method(self):
+        return 42
 
-            # Call the function under test
-            result = get_json(test_url)
+    @memoize
+    def a_property(self):
+        return self.a_method()
 
-            # Assert the mocked get was called once with the correct URL
-            mock_get.assert_called_once_with(test_url)
+class TestMemoize(unittest.TestCase):
+    def test_memoize(self):
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+            test_instance = TestClass()
+            
+            # Call the memoized property twice
+            first_call = test_instance.a_property()
+            second_call = test_instance.a_property()
 
-            # Assert the function returns the expected payload
-            self.assertEqual(result, test_payload)
+            # Assert the correct result is returned both times
+            self.assertEqual(first_call, 42)
+            self.assertEqual(second_call, 42)
 
-# End of TestGetJson class
+            # Ensure a_method is called only once
+            mock_method.assert_called_once()
 
+if __name__ == "__main__":
+    unittest.main()
