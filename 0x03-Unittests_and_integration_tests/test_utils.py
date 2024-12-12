@@ -1,64 +1,39 @@
 #!/usr/bin/env python3
 
-"""
-Unit tests for the `access_nested_map` function.
-- Tests the correct functionality for valid paths.
-- Tests exception handling for invalid paths.
-"""
-
 import unittest
-from parameterized import parameterized
+from unittest.mock import patch, Mock
+from utils import get_json
 
-# Function to retrieve a value from a nested map using a given path
-def access_nested_map(nested_map, path):
-    """
-    Access a value from a nested dictionary using a sequence of keys.
-
-    Args:
-        nested_map (dict): The nested dictionary to traverse.
-        path (tuple): A sequence of keys to follow in the nested dictionary.
-
-    Returns:
-        The value found at the end of the path.
-
-    Raises:
-        KeyError: If a key in the path is not found in the dictionary.
-    """
-    for key in path:
-        if not isinstance(nested_map, dict):
-            raise KeyError(f"Key {key} not found")
-        if key not in nested_map:
-            raise KeyError(f"Key {key} not found")
-        nested_map = nested_map[key]
-    return nested_map
-
-class TestAccessNestedMap(unittest.TestCase):
-    """Unit test class for the `access_nested_map` function."""
-
-    @parameterized.expand([
-        # Test cases for valid paths
-        ({"a": 1}, ("a",), 1),
-        ({"a": {"b": 2}}, ("a",), {"b": 2}),
-        ({"a": {"b": 2}}, ("a", "b"), 2),
-    ])
-    def test_access_nested_map(self, nested_map, path, expected):
+class TestGetJson(unittest.TestCase):
+    def test_get_json(self):
         """
-        Test that `access_nested_map` returns the correct value for valid paths.
+        Test the utils.get_json function to ensure it returns the expected result.
+        Uses unittest.mock.patch to mock external HTTP calls.
         """
-        self.assertEqual(access_nested_map(nested_map, path), expected)
+        # Define test cases
+        test_cases = [
+            {"test_url": "http://example.com", "test_payload": {"payload": True}},
+            {"test_url": "http://holberton.io", "test_payload": {"payload": False}}
+        ]
 
-    @parameterized.expand([
-        # Test cases for invalid paths
-        ({}, ("a",)),
-        ({"a": 1}, ("a", "b")),
-    ])
-    def test_access_nested_map_exception(self, nested_map, path):
-        """
-        Test that `access_nested_map` raises a KeyError for invalid paths.
-        """
-        with self.assertRaises(KeyError) as context:
-            access_nested_map(nested_map, path)
-        self.assertEqual(context.exception.args[0], f"Key {path[len(path)-1]} not found")
+        for case in test_cases:
+            test_url = case["test_url"]
+            test_payload = case["test_payload"]
 
-if __name__ == '__main__':
-    unittest.main()
+            # Patch the requests.get method
+            with patch("utils.requests.get") as mock_get:
+                # Create a Mock response object with a json method
+                mock_response = Mock()
+                mock_response.json.return_value = test_payload
+                mock_get.return_value = mock_response
+
+                # Call the function under test
+                result = get_json(test_url)
+
+                # Assert the mocked get was called once with the correct URL
+                mock_get.assert_called_once_with(test_url)
+
+                # Assert the function returns the expected payload
+                self.assertEqual(result, test_payload)
+
+# End of TestGetJson class
