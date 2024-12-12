@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import unittest
 from unittest.mock import patch
 
@@ -16,19 +14,28 @@ def memoize(func):
 
     return wrapper
 
+
 class TestClass:
+    """Test class to demonstrate memoization."""
+
     def a_method(self):
+        """Return a constant value for testing."""
         return 42
 
     @memoize
     def a_property(self):
+        """Memoized method that calls a_method."""
         return self.a_method()
 
+
 class TestMemoize(unittest.TestCase):
+    """Unit test for memoization decorator."""
+
     def test_memoize(self):
+        """Test that memoization caches results correctly."""
         with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
             test_instance = TestClass()
-            
+
             # Call the memoized property twice
             first_call = test_instance.a_property()
             second_call = test_instance.a_property()
@@ -39,6 +46,7 @@ class TestMemoize(unittest.TestCase):
 
             # Ensure a_method is called only once
             mock_method.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()
