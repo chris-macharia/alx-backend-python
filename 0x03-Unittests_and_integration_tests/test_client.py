@@ -36,9 +36,10 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.public_repos()
 
         # Assertions
-        self.assertEqual(result, ["repo1", "repo2", "repo3"])  # Check repo names
-        mock_public_repos_url.assert_called_once()  # Ensure property was accessed
-        mock_get_json.assert_called_once_with(mock_repos_url)  # Ensure correct URL was used
+        self.assertEqual(result, ["repo1", "repo2", "repo3"])
+        mock_public_repos_url.assert_called_once()
+        mock_get_json.assert_called_once_with(mock_repos_url)
+
 
 if __name__ == "__main__":
     unittest.main()
