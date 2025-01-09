@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'chats',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,5 @@ SIMPLE_JWT = {
     'SIGNING_KEY': 'django-insecure--v4&p_smfs)on3x##m5&tu!ok28#6o=(ahh997$e3)bi@q5=9@',  # Use your project's secret key
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+AUTH_USER_MODEL = 'chats.User'  # Point to the custom user model
