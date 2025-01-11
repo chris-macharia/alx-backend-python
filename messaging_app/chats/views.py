@@ -9,16 +9,25 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from .permissions import IsParticipantOfConversation
+from .filters import MessageFilter
+from rest_framework.pagination import PageNumberPagination
+
+class ConversationPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = ConversationPagination  # Ensure this points to a valid pagination class
 
     # Add filtering and searching capabilities
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['participants_id']  # Example: Filter by participant
-    search_fields = ['participants_id']     # Example: Search by participant
+    filterset_fields = ['participants']  # Example: Filter by participants
+    search_fields = ['participants']     # Example: Search by participants
 
     def get_queryset(self):
         # Ensure users see only their conversations
@@ -53,8 +62,9 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     # Add filtering and searching capabilities
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['conversation_id', 'sender_id']  # Example: Filter by conversation or sender
+    filterset_fields = ['conversation', 'sender']  # Example: Filter by conversation or sender
     search_fields = ['message_body']  # Example: Search within message body
+    filterset_class = MessageFilter  # Apply custom filter class
 
     def get_queryset(self):
         # Ensure users can access only messages in their conversations

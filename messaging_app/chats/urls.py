@@ -12,6 +12,7 @@ conversations_router.register(r'messages', MessageViewSet, basename='conversatio
 
 # Include the routers' URLs
 urlpatterns = [
+    path('api/', include(router.urls)),  # Include the router URLs
     path('', include(router.urls)),
     path('', include(conversations_router.urls)),
 ]
