@@ -11,6 +11,10 @@ from rest_framework.exceptions import PermissionDenied
 from .permissions import IsParticipantOfConversation
 from .filters import MessageFilter
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class ConversationPagination(PageNumberPagination):
     page_size = 10
@@ -41,12 +45,12 @@ class ConversationViewSet(viewsets.ModelViewSet):
             return Response({"error": "Participants list is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Validate participants
-        users = User.objects.filter(id__in=participants)
+        users = User.objects.filter(user_id__in=participants)
         if users.count() != len(participants):
             return Response({"error": "One or more participants are invalid"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if request.user.id not in participants:
-            participants.append(request.user.id)
+        if request.user.user_id not in participants:
+            participants.append(request.user.user_id)
 
         conversation = Conversation.objects.create()
         conversation.participants.set(participants)
