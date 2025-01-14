@@ -26,5 +26,6 @@ def log_message_edit(sender, instance, **kwargs):
                 )
                 # Mark the message as edited
                 instance.edited = True
+                instance.edited_by = getattr(instance, '_edited_by', None)
         except Message.DoesNotExist:
             pass

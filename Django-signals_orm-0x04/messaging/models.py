@@ -16,6 +16,13 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)  # Tracks edits
+    edited_by = models.ForeignKey(  # New field to track who edited the message
+        settings.AUTH_USER_MODEL,
+        related_name='edited_messages',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
