@@ -15,6 +15,7 @@ class Message(models.Model):
     )
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    edited = models.BooleanField(default=False)  # Tracks edits
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
@@ -35,3 +36,15 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user} about message {self.message.id}"
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(
+        Message,
+        related_name='edit_history',
+        on_delete=models.CASCADE
+    )
+    previous_content = models.TextField()
+    edited_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Edit history for message {self.message.id}"
