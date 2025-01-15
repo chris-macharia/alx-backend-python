@@ -1,12 +1,7 @@
 from django.db import models
 #Add your models here
 from django.conf import settings
-
-# Define the custom manager
-class UnreadMessagesManager(models.Manager):
-    def for_user(self, user):
-        # Filters unread messages for a specific user
-        return self.filter(recipient=user, read=False).only('id', 'sender', 'message_body', 'sent_at')
+from .managers import UnreadMessagesManager  # Import the custom manager
 
 class Message(models.Model):
     sender = models.ForeignKey(

@@ -71,3 +71,16 @@ def unread_messages_view(request):
     return render(request, 'messages/unread_messages.html', {
         'unread_messages': unread_messages,
     })
+
+def inbox(request):
+    """
+    View to display the user's inbox with only unread messages.
+    Optimized to retrieve only necessary fields using .only().
+    """
+    if request.user.is_authenticated:
+        # Use .only() to optimize the query
+        unread_messages = Message.unread.for_user(request.user).only('id', 'sender', 'message_body', 'sent_at')
+        context = {'unread_messages': unread_messages}
+        return render(request, 'messaging/inbox.html', context)
+    else:
+        return render(request, 'messaging/login.html')
