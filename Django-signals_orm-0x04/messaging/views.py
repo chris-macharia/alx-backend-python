@@ -79,7 +79,7 @@ def inbox(request):
     """
     if request.user.is_authenticated:
         # Use .only() to optimize the query
-        unread_messages = Message.unread.for_user(request.user).only('id', 'sender', 'message_body', 'sent_at')
+        unread_messages = Message.unread.for_user(request.user).only('id', 'sender', 'message_body', 'sent_at') # Message.unread.unread_for_user
         context = {'unread_messages': unread_messages}
         return render(request, 'messaging/inbox.html', context)
     else:
