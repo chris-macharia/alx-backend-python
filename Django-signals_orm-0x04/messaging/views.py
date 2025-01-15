@@ -57,7 +57,7 @@ def message_detail_view(request, message_id):
 def user_messages_view(request):
     # Fetch all messages for the logged-in user, optimizing the query
     messages = Message.objects.filter(
-        models.Q(sender=request.user) | models.Q(recipient=request.user)
+        models.Q(sender=request.user) | models.Q(recipient=request.user) #["receiver"]
     ).select_related('sender', 'recipient').prefetch_related('replies')
 
     return render(request, 'messages/user_messages.html', {
