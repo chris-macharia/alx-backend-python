@@ -37,3 +37,29 @@ def message_thread_view(request, message_id):
         'parent_message': parent_message,
         'threaded_messages': threaded_messages,
     })
+
+def message_detail_view(request, message_id):
+    # Ensure only messages the user is involved in are queried
+    message = get_object_or_404(
+        Message.objects.select_related('sender', 'recipient').prefetch_related('replies'),
+        id=message_id,
+        sender=request.user  # Ensures sender is the logged-in user
+    )
+
+    # Fetch threaded messages
+    threaded_messages = get_threaded_messages(message)
+
+    return render(request, 'messages/message_detail.html', {
+        'message': message,
+        'threaded_messages': threaded_messages,
+    })
+
+def user_messages_view(request):
+    # Fetch all messages for the logged-in user, optimizing the query
+    messages = Message.objects.filter(
+        models.Q(sender=request.user) | models.Q(recipient=request.user)
+    ).select_related('sender', 'recipient').prefetch_related('replies')
+
+    return render(request, 'messages/user_messages.html', {
+        'messages': messages,
+    })

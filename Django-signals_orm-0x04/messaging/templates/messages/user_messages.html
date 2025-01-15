@@ -1,0 +1,9 @@
+<div class="user-messages">
+    {% for message in messages %}
+        <div class="message">
+            <p><strong>{{ message.sender.username }}</strong> to <strong>{{ message.recipient.username }}</strong>:</p>
+            <p>{{ message.message_body }}</p>
+            <p>Sent at: {{ message.sent_at }}</p>
+        </div>
+    {% endfor %}
+</div>

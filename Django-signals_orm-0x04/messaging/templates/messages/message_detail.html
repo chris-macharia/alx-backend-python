@@ -1,0 +1,15 @@
+<div class="message">
+    <p><strong>{{ message.sender.username }}</strong>: {{ message.message_body }}</p>
+    <p>To: {{ message.recipient.username }}</p>
+    <p>Sent at: {{ message.sent_at }}</p>
+</div>
+<hr>
+<div class="replies">
+    {% for reply in threaded_messages %}
+        <div class="reply" style="margin-left: {{ forloop.counter0|add:"20" }}px;">
+            <p><strong>{{ reply.sender.username }}</strong>: {{ reply.message_body }}</p>
+            <p>To: {{ reply.recipient.username }}</p>
+            <p>Sent at: {{ reply.sent_at }}</p>
+        </div>
+    {% endfor %}
+</div>
