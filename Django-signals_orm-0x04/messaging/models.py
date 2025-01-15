@@ -2,6 +2,12 @@ from django.db import models
 #Add your models here
 from django.conf import settings
 
+# Define the custom manager
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        # Filters unread messages for a specific user
+        return self.filter(recipient=user, read=False).only('id', 'sender', 'message_body', 'sent_at')
+
 class Message(models.Model):
     sender = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
@@ -30,7 +36,10 @@ class Message(models.Model):
         blank=True, 
         related_name='replies'
     )
+    read = models.BooleanField(default=False)  # New field to track if a message has been read
 
+    objects = models.Manager()  # Default manager
+    unread = UnreadMessagesManager()  # Custom manager
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
@@ -63,3 +72,4 @@ class MessageHistory(models.Model):
 
     def __str__(self):
         return f"Edit history for message {self.message.id}"
+

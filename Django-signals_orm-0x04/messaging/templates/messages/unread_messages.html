@@ -1,0 +1,10 @@
+<div class="unread-messages">
+    <h2>Unread Messages</h2>
+    {% for message in unread_messages %}
+        <div class="message">
+            <p><strong>From:</strong> {{ message.sender.username }}</p>
+            <p>{{ message.message_body }}</p>
+            <p><strong>Sent at:</strong> {{ message.sent_at }}</p>
+        </div>
+    {% endfor %}
+</div>

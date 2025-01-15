@@ -63,3 +63,11 @@ def user_messages_view(request):
     return render(request, 'messages/user_messages.html', {
         'messages': messages,
     })
+
+def unread_messages_view(request):
+    # Fetch unread messages for the logged-in user
+    unread_messages = Message.unread.for_user(request.user)
+
+    return render(request, 'messages/unread_messages.html', {
+        'unread_messages': unread_messages,
+    })
