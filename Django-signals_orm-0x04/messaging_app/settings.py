@@ -161,3 +161,10 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'chats.User'  # Point to the custom user model
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

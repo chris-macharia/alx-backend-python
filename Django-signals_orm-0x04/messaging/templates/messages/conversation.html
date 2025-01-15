@@ -1,0 +1,13 @@
+<h1>Conversation Messages</h1>
+<ul>
+  {% for message in messages %}
+    <li>
+      From: {{ message.sender.username }} <br>
+      To: {{ message.recipient.username }} <br>
+      Message: {{ message.message_body }} <br>
+      Sent at: {{ message.sent_at }}
+    </li>
+  {% empty %}
+    <p>No messages in this conversation.</p>
+  {% endfor %}
+</ul>

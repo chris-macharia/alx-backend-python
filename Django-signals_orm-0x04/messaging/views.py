@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import Http404
 from django.contrib.auth import get_user_model
 from .utils import get_threaded_messages
+from django.views.decorators.cache import cache_page
 
 # Handles the deletion of a user account
 @login_required
@@ -82,5 +83,18 @@ def inbox(request):
         unread_messages = Message.unread.for_user(request.user).only('id', 'sender', 'message_body', 'sent_at') # Message.unread.unread_for_user
         context = {'unread_messages': unread_messages}
         return render(request, 'messaging/inbox.html', context)
+    else:
+        return render(request, 'messaging/login.html')
+
+@cache_page(60)  # Cache the view for 60 seconds
+def conversation_messages(request, conversation_id):
+    """
+    View to display messages in a conversation.
+    Uses caching to improve performance.
+    """
+    if request.user.is_authenticated:
+        messages = Message.objects.filter(conversation_id=conversation_id).select_related('sender', 'recipient')
+        context = {'messages': messages}
+        return render(request, 'messaging/conversation.html', context)
     else:
         return render(request, 'messaging/login.html')
