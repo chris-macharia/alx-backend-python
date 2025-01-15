@@ -1,0 +1,13 @@
+<div class="message">
+    <p><strong>{{ parent_message.sender.username }}</strong>: {{ parent_message.message_body }}</p>
+    <p>Sent at: {{ parent_message.sent_at }}</p>
+</div>
+<hr>
+<div class="replies">
+    {% for message in threaded_messages %}
+        <div class="reply" style="margin-left: {{ forloop.counter0|add:"20" }}px;">
+            <p><strong>{{ message.sender.username }}</strong>: {{ message.message_body }}</p>
+            <p>Sent at: {{ message.sent_at }}</p>
+        </div>
+    {% endfor %}
+</div>
