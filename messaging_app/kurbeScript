@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Function to check if Minikube is installed
+check_minikube() {
+  if ! command -v minikube &> /dev/null
+  then
+    echo "Minikube could not be found. Installing Minikube..."
+    install_minikube
+  else
+    echo "Minikube is already installed."
+  fi
+}
+
+# Function to install Minikube
+install_minikube() {
+  # Install Minikube using curl
+  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+  sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+  sudo chmod +x /usr/local/bin/minikube
+  echo "Minikube installed successfully."
+}
+
+# Start Minikube cluster
+start_minikube() {
+  echo "Starting Minikube..."
+  minikube start
+}
+
+# Verify the Kubernetes cluster is running
+verify_cluster() {
+  echo "Verifying Kubernetes cluster status..."
+  minikube kubectl -- cluster-info
+}
+
+# Get available pods in the cluster
+get_pods() {
+  echo "Retrieving available pods..."
+  minikube kubectl -- get pods --all-namespaces
+}
+
+# Main script execution
+check_minikube
+start_minikube
+verify_cluster
+get_pods
